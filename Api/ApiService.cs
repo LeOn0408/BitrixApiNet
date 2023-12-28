@@ -24,15 +24,15 @@ public class ApiService
 
     private CookieContainer? _cookie;
 
-    private string? _pass;
+    private readonly string _pass;
 
-    private string? _clientSecret;
+    private readonly string _clientSecret;
 
-    private string? _urlPortal;
+    private readonly string _urlPortal;
 
-    private string? _clientId;
+    private readonly string _clientId;
 
-    private string? _login;
+    private readonly string _login;
 
 
     internal ApiService(string login, string pass, string urlPortal,string clientId,string clientSecret)

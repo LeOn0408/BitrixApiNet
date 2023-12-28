@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace BitrixApiNet
 {
-    public class Filter
+    public class QueryParameters
     {
+        public Dictionary<string, string>? Filter { get; set; }
     }
 }

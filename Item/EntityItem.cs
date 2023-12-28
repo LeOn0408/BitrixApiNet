@@ -15,9 +15,9 @@ namespace BitrixApiNet.Item
         public int? Id { get; set; }
 
         [JsonProperty("ORIGINATOR_ID")]
-        public int? OriginatorId { get; set; }
+        public string? OriginatorId { get; set; }
 
         [JsonProperty("ORIGIN_ID")]
-        public int? OriginId { get; set; }
+        public string? OriginId { get; set; }
     }
 }
