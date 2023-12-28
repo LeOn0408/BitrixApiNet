@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace BitrixApiNet.Api;
 
-public class ApiClient
+public class ApiService
 {
     private const string BX_OAuthSite = "https://oauth.bitrix.info";
 
@@ -24,18 +24,18 @@ public class ApiClient
 
     private CookieContainer? _cookie;
 
-    private readonly string _pass;
+    private string? _pass;
 
-    private readonly string _clientSecret;
+    private string? _clientSecret;
 
-    private readonly string _urlPortal;
+    private string? _urlPortal;
 
-    private readonly string _clientId;
+    private string? _clientId;
 
-    private readonly string _login;
+    private string? _login;
 
 
-    internal ApiClient(string login, string pass, string urlPortal,string clientId,string clientSecret)
+    internal ApiService(string login, string pass, string urlPortal,string clientId,string clientSecret)
     {
         _urlPortal = urlPortal;
         _clientId = clientId;

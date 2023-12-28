@@ -1,5 +1,6 @@
 ﻿using BitrixApiNet.Api;
 using BitrixApiNet.Item;
+using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -7,11 +8,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BitrixApiNet.Factory
+namespace BitrixApiNet.Service
 {
-    public abstract class FactoryBase
+    public abstract class EntityServiceBase
     {
-        private readonly ApiClient _apiClient;
+        private readonly ApiService _apiService;
         private readonly Module _module;
         private readonly string _entityName;
 
@@ -23,19 +24,20 @@ namespace BitrixApiNet.Factory
 
         public abstract int CreateItem(EntityItem item);
 
-        public abstract bool RemoveItem(EntityItem item);
+        public abstract bool DeleteItem(int id);
 
+        public abstract bool UpdateItem(EntityItem item);
 
-        protected FactoryBase(ApiClient apiClient, Module module, string entityName)
+        protected EntityServiceBase(Module module, string entityName, ApiService apiService)
         {
-            _apiClient = apiClient;
+            _apiService = apiService;
             _module = module;
             _entityName = entityName;
         }
 
         private protected async Task<string> SendPostAsync(string method, object body)
         {
-            var jsonResult = _apiClient.PostAsync($"{_module}.{_entityName}.{method}", body);
+            var jsonResult = _apiService.PostAsync($"{_module}.{_entityName}.{method}", body);
 
             return await jsonResult;
         }
