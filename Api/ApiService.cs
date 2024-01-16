@@ -1,12 +1,8 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using BitrixApiNet.Item;
+using Newtonsoft.Json;
 using System.Net;
-using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace BitrixApiNet.Api;
 
@@ -163,6 +159,13 @@ public class ApiService
         var response = await client.PostAsync(url, contentData);
 
         return await response.Content.ReadAsStringAsync();
+    }
+
+    internal string[]? GetSelectFields<P>() where P : ItemBase
+    {
+        var jsonPropertyNames = JsonPropertyHelper.GetJsonPropertyNames(typeof(P));
+        
+        return jsonPropertyNames.ToArray();
     }
 }
 
