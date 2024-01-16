@@ -9,5 +9,6 @@ namespace BitrixApiNet
     public class QueryParameters
     {
         public Dictionary<string, string>? Filter { get; set; }
+        public string[]? Select { get; set; }
     }
 }
