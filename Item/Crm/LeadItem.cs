@@ -1,9 +1,9 @@
 ﻿using BitrixApiNet.Api;
 using Newtonsoft.Json;
 
-namespace BitrixApiNet.Item
+namespace BitrixApiNet.Item.Crm
 {
-    public class LeadItem : EntityItem
+    public class LeadItem : CrmItem
     {
         [JsonProperty("TITLE")]
         public string? Title { get; set; }

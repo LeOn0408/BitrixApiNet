@@ -1,5 +1,5 @@
 ﻿using BitrixApiNet.Api;
-using BitrixApiNet.Item;
+using BitrixApiNet.Item.Crm;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;

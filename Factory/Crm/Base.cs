@@ -1,5 +1,6 @@
 ﻿using BitrixApiNet.Api;
 using BitrixApiNet.Item;
+using BitrixApiNet.Item.Crm;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using System;
@@ -10,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace BitrixApiNet.Factory.Crm
 {
-    public abstract class Base<T> : IBase<T> where T : EntityItem
+    public abstract class Base<T> : IBase<T> where T : CrmItem
     {
         public int EntityTypeId { get; init; }
         public string EntityTypeName { get; init; }
@@ -20,17 +21,17 @@ namespace BitrixApiNet.Factory.Crm
 
         private readonly ApiService _apiService;
 
-        public EntityItem Get(int id)
+        public CrmItem Get(int id)
         {
-            return GetData<EntityItem>(id) ?? new();
+            return GetData<CrmItem>(id) ?? new();
         }
 
-        public ICollection<EntityItem> GetItems(QueryParameters queryParameters)
+        public ICollection<CrmItem> GetItems(QueryParameters queryParameters)
         {
-            return GetList<EntityItem>(queryParameters);
+            return GetList<CrmItem>(queryParameters);
         }
 
-        public ICollection<EntityItem> GetItems()
+        public ICollection<CrmItem> GetItems()
         {
             return GetItems(new QueryParameters());
         }
@@ -66,7 +67,7 @@ namespace BitrixApiNet.Factory.Crm
         }
 
 
-        public bool UpdateItem(EntityItem item)
+        public bool UpdateItem(CrmItem item)
         {
             var id = item.Id;
             var fields = item;
@@ -92,11 +93,11 @@ namespace BitrixApiNet.Factory.Crm
         }
 
 
-        public ICollection<P> GetItems<P>(QueryParameters? queryParameters)
+        public ICollection<P> GetItems<P>(QueryParameters? queryParameters) where P : ItemBase
         {
             return GetList<P>(queryParameters);
         }
-        public ICollection<P> GetItems<P>()
+        public ICollection<P> GetItems<P>() where P : ItemBase
         {
             return GetList<P>(new QueryParameters());
         }
@@ -120,18 +121,45 @@ namespace BitrixApiNet.Factory.Crm
             return await jsonResult;
         }
 
-        private protected List<P> GetList<P>(QueryParameters? queryParameters)
+        private protected List<P> GetList<P>(QueryParameters? queryParameters) where P : ItemBase
         {
-            var body = new
+            var list = new List<P>();
+            int lastId = 0;
+            var filter = queryParameters?.Filter ?? new();
+            var select = queryParameters?.Select ?? _apiService.GetSelectFields<P>();
+            filter.Add(">ID", lastId.ToString());
+            while (true)
             {
-                queryParameters
-            };
-            string responseString = SendPostAsync("list", body).Result;
-            var response = JsonConvert.DeserializeObject<ResultData<List<P>>>(responseString);
+                //TODO:Realize work with bitrix constraints
+                Thread.Sleep(1000);
 
-            if (response is null || response.Result is null)
-                return new List<P>();
-            return response.Result;
+                var body = new
+                {
+                    queryParameters?.Filter,
+                    select,
+                    start = -1,
+                    order = new { ID = "ASC" },
+                };
+                string responseString = SendPostAsync("list", body).Result;
+                var response = JsonConvert.DeserializeObject<ResultData<List<P>>>(responseString);
+
+                if (response is null || response.Result is null)
+                {
+                    break;
+                }
+                if (response.Result.LastOrDefault() is null)
+                {
+                    break;
+                }
+                if (lastId > (int)response.Result.LastOrDefault().Id)
+                    break;
+
+                lastId = (int)response.Result.LastOrDefault().Id;
+                filter[">ID"] = lastId.ToString();
+
+                list.AddRange(response.Result);
+            }
+            return list;   
         }
 
         private protected P? GetData<P>(int id)

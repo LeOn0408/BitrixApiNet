@@ -7,13 +7,10 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BitrixApiNet.Item
+namespace BitrixApiNet.Item.Crm
 {
-    public class EntityItem
+    public class CrmItem : ItemBase
     {
-        [JsonProperty("id")]
-        public int? Id { get; set; }
-
         [JsonProperty("ORIGINATOR_ID")]
         public string? OriginatorId { get; set; }
 

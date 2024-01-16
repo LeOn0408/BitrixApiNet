@@ -1,13 +1,13 @@
-﻿using BitrixApiNet.Item;
+﻿using BitrixApiNet.Item.Crm;
 
 namespace BitrixApiNet.Factory.Crm
 {
-    public interface IBase<T> where T : EntityItem
+    public interface IBase<T> where T : CrmItem
     {
         int CreateItem(T item);
         bool DeleteItem(int id);
-        EntityItem Get(int id);
-        ICollection<EntityItem> GetItems(QueryParameters queryParameters);
-        bool UpdateItem(EntityItem item);
+        CrmItem Get(int id);
+        ICollection<CrmItem> GetItems(QueryParameters queryParameters);
+        bool UpdateItem(CrmItem item);
     }
 }
